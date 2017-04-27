@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ajax</title>
+<script type="text/javascript">
+	var xmlHttpRequest ;
+	function create() {
+		if(window.XMLHttpRequest){
+			xmlHttpRequest = new XMLHttpRequest();
+		}else{
+			xmlHttpRequest = new ActiveXObject("Microsoft.XMLHttp");
+		}
+	}
+	window.onload = function(){
+		document.getElementById("sendBut").addEventListener("click",function(){
+			info = document.getElementById("info").value ;
+			if(info != ""){
+				create();
+				xmlHttpRequest.open("post","EchoServlet?msg="+ info);
+				xmlHttpRequest.send(null);
+				xmlHttpRequest.onreadystatechange = function(){
+					if(xmlHttpRequest.readyState == 2 || xmlHttpRequest.readyState == 3){
+						console.log("====正在处理====");
+					}
+					if(xmlHttpRequest.readyState == 4 && xmlHttpRequest.status ==200){
+						console.log("处理成功status=" + xmlHttpRequest.status+ "/readyState =" +xmlHttpRequest.readyState + "/text=" + xmlHttpRequest.responseText);
+						pElement = document.createElement("p");
+						pElement.appendChild(document.createTextNode(xmlHttpRequest.responseText));
+						document.getElementById("infoDiv").appendChild(pElement);
+					}
+					document.getElementById("info").value="";
+				}
+			}
+		},false) ;
+	}
+</script>
+</head>
+<body>
+<div id="inputDiv">
+	<input type="text" name="info" id="info">
+	<button id="sendBut">发送</button>
+</div>
+<div id="infoDiv"></div>
+</body>
+</html>
